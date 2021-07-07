@@ -1,0 +1,50 @@
+[
+    {
+        "message_id": 1,
+        "user_id": 1,
+        "message": "Welcome our chat",
+        "time": "19:00 PM"
+    },
+    {
+        "message_id": 2,
+        "user_id": "1",
+        "time": "19:00 PM",
+        "file_link": "13341online.png"
+    },
+    {
+        "message_id": 3,
+        "user_id": 2,
+        "message": "hello",
+        "time": "19:16 PM"
+    },
+    {
+        "message_id": 4,
+        "user_id": 2,
+        "message": "hello",
+        "time": "19:16 PM"
+    },
+    {
+        "message_id": 5,
+        "user_id": 2,
+        "message": "Hello world",
+        "time": "19:16 PM"
+    },
+    {
+        "message_id": 6,
+        "user_id": "2",
+        "time": "19:16 PM",
+        "file_link": "35118Screenshot_from_2021-03-03_22-35-00.png"
+    },
+    {
+        "message_id": 7,
+        "user_id": "3",
+        "time": "19:17 PM",
+        "file_link": "53552ba.jpg"
+    },
+    {
+        "message_id": 8,
+        "user_id": 3,
+        "message": "ll",
+        "time": "19:18 PM"
+    }
+]

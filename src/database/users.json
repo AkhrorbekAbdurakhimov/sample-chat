@@ -1,0 +1,30 @@
+[
+    {
+        "user_id": 1,
+        "username": "Akhrorbek",
+        "password": "12345",
+        "email": "steven2001@gmail.com",
+        "avatar_link": "36069picture1.jpg"
+    },
+    {
+        "user_id": 2,
+        "username": "donishmand",
+        "password": "1111",
+        "email": "olimjonovm007@gmail.com",
+        "avatar_link": "11091image_2020-12-06_21-59-37.png"
+    },
+    {
+        "user_id": 3,
+        "username": "Imron",
+        "password": "dsfrgg",
+        "email": "i@gmai.com",
+        "avatar_link": "90108profil.jpg"
+    },
+    {
+        "user_id": 4,
+        "username": "Adham",
+        "password": "123",
+        "email": "muzaffarov.adham@gmail.com",
+        "avatar_link": "80147photo_2018-08-25_21-25-19.jpg"
+    }
+]
