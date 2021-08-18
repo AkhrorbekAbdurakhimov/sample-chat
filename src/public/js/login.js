@@ -1,9 +1,3 @@
-let token = window.localStorage.getItem('token')
-let data = window.localStorage.getItem('response')
-if (data) data = JSON.parse(data)
-else data = []
-if (data.token) window.location = '/'
-
 const usernameInput  = document.querySelector('#usernameInput'),
     passwordInput    = document.querySelector('#passwordInput'),
     registrationForm = document.querySelector('.site-form'),
@@ -18,7 +12,7 @@ registrationForm.onsubmit = async (event) => {
     })
     if (response.token) {
         title.textContent = response.message
-        window.localStorage.setItem('response', JSON.stringify(response))
+        window.localStorage.setItem('response', JSON.stringify(response.token))
         setTimeout(() => {
             window.location = '/'
         }, 1500)

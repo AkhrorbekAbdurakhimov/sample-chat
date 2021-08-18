@@ -1,34 +1,98 @@
 const path = require('path')
+const { verify } = require('./../../lib/jwt')
 const uniqueId = require('./../../lib/mhid')
-const {addMessage} = require('./model')
+const { message, getUser, getUsers } = require('./model')
 
 const GET = (req, res) => {
     res.sendFile(path.join(process.cwd(), 'src', 'views', 'index.html'))
 }
 
 const POST = (req, res) => {
-    if (req.files) {
-        let file = req.files.file
-        let fileName = uniqueId(5) + file.name.replace(/\s/g, "_").trim()
-        file.mv(path.join(process.cwd(), 'src', 'uploads', 'files', fileName), (err) => {
-            if (err) console.log(err)
-            let message = addMessage(req.body, fileName)
-            if (message) {
-                res.status(201).json({
-                    message: "The message has sent",
-                    body: message
+    try {
+        let { id } = verify(req.headers.token)
+        if (!req.files) {
+            message(id, req.body.message, null)
+                .then(() => {
+                    res.send({
+                        message: "The message has sent successfully",
+                        body: message
+                    })
                 })
-            } 
-        })    
-    } else {
-        let message = addMessage(req.body)
-            if (message) {
-                res.status(201).json({
-                    message: "The message has sent",
-                    body: message
+                .catch((err) => {
+                    return res.send({ 
+                        status: 500, 
+                        message: "Internal server error" 
+                    })
                 })
-            } 
+        } else {
+            let file = req.files.file
+            let fileName = uniqueId(5) + file.name.replace(/\s/g, "_").trim()
+            file.mv(path.join(process.cwd(), 'src', 'uploads', 'files', fileName), (err) => {
+                if (err) console.log(err)
+            })
+
+            message(id, null, fileName)
+                .then(() => {
+                    res.send({
+                        message: "The message has sent successfully",
+                        body: message
+                    })
+                })
+                .catch((err) => {
+                    return res.send({ 
+                        status: 500, 
+                        message: "Internal server error" 
+                    })
+                })
+        }
+    } catch (err) {
+        return res.send({
+            status: 400,
+            message: "Bad request",
+            error: err
+        })
     }
 }
 
-module.exports = {GET, POST}
+const USER = (req, res) => {
+    let id = req.params.id
+    getUser(id)
+        .then((user) => {
+            res.json(user)
+        })
+        .catch((err) => {
+            return res.send({ 
+                status: 500, 
+                message: "Internal server error" 
+            })
+        })
+}
+
+const USERS = (req, res) => {
+    let currentUser = verify(req.headers.token)
+    try {
+        getUsers()
+            .then((users) => {
+                res.send({
+                    status: 200,
+                    users,
+                    currentUser
+                })
+            })
+            .catch((err) => {
+                return res.send({ 
+                    status: 500, 
+                    message: "Internal server error" 
+                })
+            })
+    } catch (err) {
+        return res.send({
+            status: 400,
+            message: "Bad request",
+            error: err
+        })
+    }
+    
+}
+
+module.exports = { GET, POST, USER, USERS }

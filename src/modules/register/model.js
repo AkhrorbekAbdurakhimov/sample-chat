@@ -1,18 +1,19 @@
 const fs = require('fs')
 const path = require('path')
+const { fetch } = require('./../../lib/postgres')
 
-const registerUser = (user, avatar_link) => {
-    const users = require(path.join(process.cwd(), 'src', 'database', 'users.json'))
-    let found = users.find(u => u.username == user.username)
-    if (!found) {
-        const userId = users.length ? users[users.length - 1].user_id + 1 : 1
-        const newUser = {user_id : userId, ... user, avatar_link}
-        users.push(newUser)
-        fs.writeFileSync(path.join(process.cwd(), 'src', 'database', 'users.json'), JSON.stringify(users, null, 4))
-        delete newUser.password
-        return newUser
-    } else return
-}
+const RegisterUser = `
+    insert into users (
+        username,
+        email,
+        password,
+        avatar_link
+    ) values (
+        $1, $2, $3, $4
+    ) returning user_id;
+`
+
+const register = ({ username, password, email, avatar_link }) => fetch(RegisterUser, username, password, email, avatar_link)
 
 
-module.exports = {registerUser}
+module.exports = { register }

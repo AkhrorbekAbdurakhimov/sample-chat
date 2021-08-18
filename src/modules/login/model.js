@@ -1,13 +1,13 @@
 const path = require('path')
+const { fetch } = require('./../../lib/postgres')
 
-const loginUser = (user) => {
-    const users = require(path.join(process.cwd(), 'src', 'database', 'users.json'))
-    let found = users.find(u => u.username == user.username && u.password == user.password)
-    if (found) {
-        delete found.password
-        return found
-    } else return
-}
+const LoginUser = `
+    select 
+        user_id
+    from users
+    where username = $1 and password = $2;
+`
 
+const login = ({ username, password }) => fetch(LoginUser, username, password)
 
-module.exports = {loginUser}
+module.exports = { login }

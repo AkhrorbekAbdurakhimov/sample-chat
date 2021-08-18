@@ -1,11 +1,3 @@
-let token = window.localStorage.getItem('token')
-let data = window.localStorage.getItem('response')
-if (data) data = JSON.parse(data)
-else data = []
-
-if (!data.token) window.location = '/login'
-
-
 const profileAvatar = document.querySelector('.profile-avatar'),
     profileName     = document.querySelector('.profile-name'),
     chatsList       = document.querySelector('.chats-list'),
@@ -15,15 +7,28 @@ const profileAvatar = document.querySelector('.profile-avatar'),
     uploadInput     = document.querySelector('#uploads'),
     uploadedFiles   = document.querySelector('.uploaded-file')
 
-let currentUserId = data.body.user_id
+// let currentUserId = data.body.user_id
 
-profileAvatar.src = `images/${data.body.avatar_link}`
-profileName.textContent = data.body.username
+// profileAvatar.src = `images/${data.body.avatar_link}`
+// profileName.textContent = data.body.username
 
 async function groupMembersRender() {
-    let data = await request('/users', 'GET')
+    let token = window.localStorage.getItem('token')
+    token = token ? JSON.parse(token) : ''
+    let response = await fetch('/users', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'token': token
+        }
+    })
+    let data = await response.json()
     let string = ""
-    data.map(user => {
+    data.users.map(user => {
+        if (user.user_id == data.currentUser.id) {
+            profileAvatar.src = `images/${user.avatar_link}`
+            profileName.textContent = user.username
+        }
         string += `
             <li class="chats-item">
                 <img src=${'images/' + user.avatar_link} alt="profile-picture" />
@@ -32,10 +37,8 @@ async function groupMembersRender() {
         `
     })
     chatsList.innerHTML = string
-    const allAvatars = document.querySelectorAll('.chats-item span')
-    allAvatars.forEach((avatar, index) => {
-    })
-    messagesRenderer(currentUserId, data)
+
+    // messagesRenderer(currentUserId, data)
 }
 async function messagesRenderer(id, users) {
     let data = await request('/messages', 'GET')
@@ -82,36 +85,43 @@ async function messagesRenderer(id, users) {
     chatMain.innerHTML = string
     uploadedFiles.innerHTML = str
 }
+
 groupMembersRender()
-
-
 
 form.onsubmit = async (event) => {
     event.preventDefault()
-    let date = new Date()
-    let time = `${date.getHours() < 10 ? '0' + date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()} ${date.getHours() < 12 ? 'AM' : 'PM'}`
-    let response = await request('/', 'POST', {
-        user_id: currentUserId,
-        message: textInput.value,
-        time
+    let token = window.localStorage.getItem('token')
+    token = token ? JSON.parse(token) : ''
+    let response = await fetch('/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'token': token
+        },
+        body: JSON.stringify({
+            message: textInput.value
+        })
     })
+    response = await response.json()
     textInput.value = null
     groupMembersRender()
 }
 
 uploadInput.onchange = async (event) => {
     event.preventDefault()
-    let date = new Date()
-    let time = `${date.getHours() < 10 ? '0' + date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()} ${date.getHours() < 12 ? 'AM' : 'PM'}`
+    let token = window.localStorage.getItem('token')
+    token = token ? JSON.parse(token) : ''
+
     let formData = new FormData()
-    formData.append('user_id', currentUserId)
-    formData.append('time', time)
     formData.append('file', uploadInput.files[0])
     let response = await fetch('/', {
         method: 'POST',
+        headers: {
+            'token': token
+        },
         body: formData
     })
     response = await response.json()
-    console.log(response);
+    textInput.value = null
     groupMembersRender()
 }

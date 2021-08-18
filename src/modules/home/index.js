@@ -1,9 +1,14 @@
 const express = require('express')
-const homeRoute = express.Router()
-const {GET, POST} = require('./controller')
+const router = express.Router()
+const { GET, POST, USER, USERS /*MESSAGES, MESSAGE  */} = require('./controller')
 
-homeRoute.route('/')
+router.route('/')
     .get(GET)
     .post(POST)
 
-module.exports = homeRoute
+router.get('/users', USERS)
+router.get('/users/:id', USER)
+// router.get('/messages', MESSAGES)
+// router.get('/messages/:id', MESSAGE)
+
+module.exports = router

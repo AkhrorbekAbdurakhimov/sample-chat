@@ -1,22 +1,30 @@
-const fs = require('fs')
-const path = require('path')
+const { fetch, fetchAll } = require('./../../lib/postgres')
 
-const addMessage = (message, file_link) => {
-    if (file_link) {
-        const messages = require(path.join(process.cwd(), 'src', 'database', 'messages.json'))
-        const message_id = messages.length ? messages[messages.length - 1].message_id + 1 : 1
-        const newMessage = {message_id, ... message, file_link}
-        messages.push(newMessage)
-        fs.writeFileSync(path.join(process.cwd(), 'src', 'database', 'messages.json'), JSON.stringify(messages, null, 4))
-        return newMessage
-    } else {
-        const messages = require(path.join(process.cwd(), 'src', 'database', 'messages.json'))
-        const message_id = messages.length ? messages[messages.length - 1].message_id + 1 : 1
-        const newMessage = {message_id, ... message}
-        messages.push(newMessage)
-        fs.writeFileSync(path.join(process.cwd(), 'src', 'database', 'messages.json'), JSON.stringify(messages, null, 4))
-        return newMessage
-    }
-}
+const Message = `
+    insert into messages (
+        user_id,
+        message,
+        file_url 
+    ) values (
+        $1, $2, $3
+    ) returning message_id;
+`
 
-module.exports = {addMessage}
+const GetUser = `
+    select 
+        *
+    from users
+    where user_id = $1;
+`
+
+const GetUsers = `
+    select 
+        *
+    from users;
+`
+
+const message = (id, message, file_url) => fetch(Message, id, message, file_url)
+const getUser = (id) => fetch(GetUser, id)
+const getUsers = () => fetchAll(GetUsers)
+
+module.exports = { message, getUser, getUsers }

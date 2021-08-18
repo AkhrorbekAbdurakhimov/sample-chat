@@ -32,10 +32,12 @@ registrationForm.onsubmit = async (event) => {
     response = await response.json()
     if (response.token) {
         title.textContent = response.message
-        window.localStorage.setItem('response', JSON.stringify(response))
+        window.localStorage.setItem('token', JSON.stringify(response.token))
         setTimeout(() => {
             window.location = '/'
         }, 1500)
+    } else {
+        title.textContent = response.message
     }
 }
 

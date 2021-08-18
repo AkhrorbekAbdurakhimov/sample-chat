@@ -17,4 +17,12 @@ for (const name of Object.keys(nets)) {
 const host = results["Wi-Fi"][0]
 const PORT = 8000
 
-module.exports = {host, PORT}
+const DB = {
+    host: 'localhost',
+    PORT: 5432,
+    user: 'postgres',
+    password: '12345',
+    database: 'chat'
+}
+
+module.exports = { host, PORT, DB }

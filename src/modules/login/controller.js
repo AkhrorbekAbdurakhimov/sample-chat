@@ -1,22 +1,28 @@
 const path = require('path')
-const {sign} = require('./../../lib/jwt')
-const {loginUser} = require('./model')
+const { sign } = require('./../../lib/jwt')
+const { login } = require('./model')
 
 const GET = (req, res) => {
     res.sendFile(path.join(process.cwd(), 'src', 'views', 'login.html'))
 }
 
 const POST = (req, res) => {
-    let user = loginUser(req.body)
-    if (user) {
-        res.status(201).json({
-            message: "The user has logged in",
-            body: user,
-            token: sign(user)
+    console.log(req.body);
+    login(req.body)
+        .then(({user_id}) => {
+            res.send({
+                status: 200,
+                token: sign({ id: user_id }), 
+                message: "The user has registered successfully" 
+            })
         })
-    } else {
-        res.status(401).json({message: "Wrong username or password"})
-    }
+        .catch((err) => {
+            console.log(err);
+            return res.send({ 
+                status: 500, 
+                message: "The user not found please register" 
+            })
+        })
 }
 
-module.exports = {GET, POST}
+module.exports = { GET, POST }
