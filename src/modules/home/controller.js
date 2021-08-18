@@ -1,7 +1,7 @@
 const path = require('path')
 const { verify } = require('./../../lib/jwt')
 const uniqueId = require('./../../lib/mhid')
-const { message, getUser, getUsers } = require('./model')
+const { message, getUsers, getMessages } = require('./model')
 
 const GET = (req, res) => {
     res.sendFile(path.join(process.cwd(), 'src', 'views', 'index.html'))
@@ -54,20 +54,6 @@ const POST = (req, res) => {
     }
 }
 
-const USER = (req, res) => {
-    let id = req.params.id
-    getUser(id)
-        .then((user) => {
-            res.json(user)
-        })
-        .catch((err) => {
-            return res.send({ 
-                status: 500, 
-                message: "Internal server error" 
-            })
-        })
-}
-
 const USERS = (req, res) => {
     let currentUser = verify(req.headers.token)
     try {
@@ -91,8 +77,33 @@ const USERS = (req, res) => {
             message: "Bad request",
             error: err
         })
-    }
-    
+    } 
 }
 
-module.exports = { GET, POST, USER, USERS }
+const MESSAGES = (req, res) => {
+    let currentUser = verify(req.headers.token)
+    try {
+        getMessages()
+            .then((messages) => {
+                res.send({
+                    status: 200,
+                    messages,
+                    currentUser
+                })
+            })
+            .catch((err) => {
+                return res.send({ 
+                    status: 500, 
+                    message: "Internal server error" 
+                })
+            })
+    } catch (err) {
+        return res.send({
+            status: 400,
+            message: "Bad request",
+            error: err
+        })
+    } 
+}
+
+module.exports = { GET, POST, USERS, MESSAGES }

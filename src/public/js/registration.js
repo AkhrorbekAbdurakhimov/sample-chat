@@ -1,7 +1,5 @@
-let data = window.localStorage.getItem('response')
-if (data) data = JSON.parse(data)
-else data = []
-if (data.token) window.location = '/'
+let token = window.localStorage.getItem('token')
+if (token) window.location = '/'
 
 const usernameInput  = document.querySelector('#usernameInput'),
     emailInput       = document.querySelector('#emailInput'),

@@ -10,21 +10,27 @@ const Message = `
     ) returning message_id;
 `
 
-const GetUser = `
-    select 
-        *
-    from users
-    where user_id = $1;
-`
-
 const GetUsers = `
     select 
         *
     from users;
 `
 
+const GetMessages = `
+    select 
+        u.user_id,
+        u.username,
+        u.avatar_link,
+        m.message,
+        m.file_url,
+        to_char(m.message_time, 'HH24:MI:SS') as time
+    from messages m
+    inner join users u on u.user_id = m.user_id
+`
+
 const message = (id, message, file_url) => fetch(Message, id, message, file_url)
 const getUser = (id) => fetch(GetUser, id)
 const getUsers = () => fetchAll(GetUsers)
+const getMessages = () => fetchAll(GetMessages)
 
-module.exports = { message, getUser, getUsers }
+module.exports = { message, getUsers, getMessages }

@@ -1,3 +1,6 @@
+let token = window.localStorage.getItem('token')
+if (token) window.location = '/'
+
 const usernameInput  = document.querySelector('#usernameInput'),
     passwordInput    = document.querySelector('#passwordInput'),
     registrationForm = document.querySelector('.site-form'),
