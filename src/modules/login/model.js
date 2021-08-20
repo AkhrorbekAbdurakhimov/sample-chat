@@ -3,7 +3,9 @@ const { fetch } = require('./../../lib/postgres')
 
 const LoginUser = `
     select 
-        user_id
+        user_id,
+        username, 
+        avatar_link
     from users
     where username = $1 and password = $2;
 `

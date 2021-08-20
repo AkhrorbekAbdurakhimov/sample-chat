@@ -10,10 +10,9 @@ const RegisterUser = `
         avatar_link
     ) values (
         $1, $2, $3, $4
-    ) returning user_id;
+    ) returning *;
 `
 
-const register = ({ username, password, email, avatar_link }) => fetch(RegisterUser, username, password, email, avatar_link)
-
+const register = ({ username, email, password, avatar_link }) => fetch(RegisterUser, username, email, password, avatar_link)
 
 module.exports = { register }

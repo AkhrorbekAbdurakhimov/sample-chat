@@ -12,15 +12,20 @@
 <body>
     <div class="container">
         <div class="users-side">
-            <div class="top-nav">
+            <div class="top-nav active">
                 <h2>Groups Members</h2>
             </div>
             <ul class="chats-list">
             </ul>
+            <div class="bottom-nav">
+                <h2>Online Users</h2>
+            </div>
+            <ul class="online-users">
+            </ul>
         </div>
         <div class="chat-side">
             <div class="chat-header">
-                <h2>Web-Standart Group-2 Najot Ta'lim</h2> 
+                <h2 class="chat-title">Web-Standart Group-2 Najot Ta'lim</h2> 
             </div>
             <div class="chat-main">
             </div>
@@ -36,6 +41,15 @@
                     <input type="file" id="uploads" name="uploads">
                 </div>
                 <button id="sendBtn" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </form>
+            <form action="#" class="chat-footer-room hide">
+                <button class="icon-btn" type="button">    
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                </button>
+                <input type="text" placeholder="Enter a message." id="textInputRoom" required>
+                <button id="sendBtnRoom" type="submit">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 </button>
             </form>

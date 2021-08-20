@@ -31,11 +31,11 @@ const POST = (req, res) => {
         })
     
     register(value)
-        .then(({user_id}) => {
+        .then((user) => {
             res.send({
                 status: 201,
                 message: "The user has registered succussfully",
-                token: sign({ id: user_id })
+                token: sign({ id: user.user_id, username: user.username, avatar_link: user.avatar_link })
             })
         })
         .catch((err) => {

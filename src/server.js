@@ -21,12 +21,32 @@ app.use(fileUpload({
 const modules = require('./modules')
 app.use(modules)
 
-// download files
-app.get('/downloads', (req, res) => {
-    res.download(path.join(__dirname, 'uploads', 'files', req.query.fileName))
-})
-
+let users = []
 io.on('connection', (socket) => {
+    console.log("a user connected")
+
+    socket.on("user joined", async ({token}) => {
+        try {
+            let { id, username, avatar_link } = verify(token)
+            users.push({id, username, avatar_link, socketId: socket.id})
+            io.emit("getUsers", users)
+        } catch (err) {
+            console.log(err)
+        }  
+    })
+    socket.on("sendMessage", ({senderId, receiverId, message}) => {
+        const senderUser = users.find(user => user.id == senderId)
+        const receiverUser = users.find(user => user.id == receiverId)
+        io.to(receiverUser.socketId).emit("getMessage", {
+            senderUser,
+            receiverUser,
+            message
+        })
+    })
+    socket.on("disconnect", async () => {
+        users = users.filter((user) => user.socketId !== socket.id)
+        io.emit("getUsers", users)
+    })
     socket.on('watch', () => {
         socket.broadcast.emit('show')
     })
@@ -36,9 +56,6 @@ io.on('connection', (socket) => {
     socket.on('stop typing', () => {
 		socket.broadcast.emit('stopping')
 	})
-    socket.on('connecting', ({token}) => {
-        let id = verify(token)
-    })
 })
 
 httpServer.listen(PORT, () => console.log(`server is running on http://${host}:${PORT}`))

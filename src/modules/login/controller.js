@@ -9,10 +9,10 @@ const GET = (req, res) => {
 const POST = (req, res) => {
     console.log(req.body);
     login(req.body)
-        .then(({user_id}) => {
+        .then((user) => {
             res.send({
                 status: 200,
-                token: sign({ id: user_id }), 
+                token: sign({ id: user.user_id, username: user.username, avatar_link: user.avatar_link }), 
                 message: "The user has registered successfully" 
             })
         })
